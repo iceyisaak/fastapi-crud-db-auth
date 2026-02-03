@@ -58,7 +58,7 @@ def get_post(id:int, response:Response):
 
     if not post:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, 
+            status_code=status.HTTP_404_NOT_FOUND, 
             detail=f"Post with ID: {id} does not exist"
         )
 
