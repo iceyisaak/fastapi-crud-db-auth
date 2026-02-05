@@ -4,11 +4,11 @@ from psycopg_pool import ConnectionPool
 from dotenv import load_dotenv
 import os
 from app.database import engine, Base
-from .routers import post, user, auth
+from .routers import post, user, auth,vote
 
 load_dotenv() 
 
-Base.metadata.create_all(bind=engine)
+# Base.metadata.create_all(bind=engine)
 
 
 @asynccontextmanager
@@ -44,6 +44,7 @@ app=FastAPI(lifespan=lifespan)
 app.include_router(post.router)
 app.include_router(user.router)
 app.include_router(auth.router)
+app.include_router(vote.router)
 
 
 @app.get("/")

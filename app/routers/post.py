@@ -13,7 +13,11 @@ router=APIRouter(
 
 
 
-@router.get("/",status_code=status.HTTP_200_OK,response_model=List[schemas.Post])
+
+
+
+# @router.get("/",status_code=status.HTTP_200_OK,response_model=List[schemas.Post])
+@router.get("/",status_code=status.HTTP_200_OK,response_model=List[schemas.PostInfo])
 def get_posts(
     db:Session=Depends(get_db),
     current_user:schemas.User=Depends(oauth2.get_current_user),
@@ -36,12 +40,28 @@ def get_posts(
         ]
         query = query.filter(or_(*search_conditions))
     
-    posts = query.limit(limit).offset(skip).all()
+    # posts = query.limit(limit).offset(skip).all()
     
-    print(f"Search: '{search}', Found: {len(posts)} posts")
+    # print(f"Search: '{search}', Found: {len(posts)} posts")
 
-    print(search)
+    posts=db.query(models.Post,func.count(models.Vote.post_id).label("votes")).join(
+        models.Vote,models.Vote.post_id==models.Post.id,isouter=True
+    ).group_by(models.Post.id).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
+
+
+    # results = query.join(
+    # models.Vote, models.Vote.post_id == models.Post.id, isouter=True
+    # ).group_by(models.Post.id).with_entities(
+    #     models.Post, func.count(models.Vote.post_id).label("votes")
+    # ).limit(limit).offset(skip).all()
+
+    # Transform results into the expected format
     return posts
+    # print(results)
+    # return results
+
+
+
 
 
 @router.post("/",status_code=status.HTTP_201_CREATED,response_model=schemas.Post)
@@ -53,19 +73,24 @@ def create_posts(post:schemas.PostCreate,db:Session=Depends(get_db),current_user
     return new_post
 
 
-@router.get("/{id}",status_code=status.HTTP_200_OK,response_model=schemas.Post)
+@router.get("/{id}",status_code=status.HTTP_200_OK,response_model=schemas.PostInfo)
 def get_post(
     id:int, 
     db:Session=Depends(get_db),
     current_user:schemas.User=Depends(oauth2.get_current_user)
 ):
-    post=db.query(models.Post).filter(models.Post.id==id).first()
+    # post=db.query(models.Post).filter(models.Post.id==id).first()
 
     # post_query = db.query(models.Post).filter(
     #     models.Post.id == id,
     #     models.Post.owner_id == current_user.id
     # )
     # post = post_query.first()
+
+    post=db.query(models.Post,func.count(models.Vote.post_id).label("votes")).join(
+        models.Vote,models.Vote.post_id==models.Post.id,isouter=True
+    ).group_by(models.Post.id).filter(models.Post.id==id).first()
+
 
     if post is None:
         raise HTTPException(
