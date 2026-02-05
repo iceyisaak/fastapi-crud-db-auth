@@ -5,11 +5,13 @@ info:
 
 http:
   method: DELETE
-  url: 127.0.0.1:8000/posts/1
+  url: "{{baseURL}}posts/11"
   body:
     type: json
     data: ""
-  auth: inherit
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxNywiZXhwIjoxNzcwMjI4NDIxfQ.CbC2uVKp9Xzg1e5G6E-_5h2TQ4liCn0Y6NAeWAAqJzo
 
 settings:
   encodeUrl: true

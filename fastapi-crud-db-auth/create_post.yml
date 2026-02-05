@@ -5,16 +5,17 @@ info:
 
 http:
   method: POST
-  url: 127.0.0.1:8000/posts
+  url: "{{baseURL}}posts"
   body:
     type: json
     data: |-
       {
-        "title": "Top beaches in Thailand",
-        "content": "There are countless beaches you could visit, but you can never miss these beaches in Thailand.",
-        "rating":4
+        "title": "Top beaches in Singapore",
+        "content": "There are countless beaches you could visit, but you can never miss these beaches."
       }
-  auth: inherit
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxNywiZXhwIjoxNzcwMjI5NDk2fQ.WdDxKrcVf5pqOjYOhYsmEO-M9OVuhSVgBQfZwdmUYTM
 
 settings:
   encodeUrl: true

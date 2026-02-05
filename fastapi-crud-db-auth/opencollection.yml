@@ -14,7 +14,22 @@ config:
         password: ""
       bypassProxy: ""
 
-request: {}
+request:
+  auth:
+    type: bearer
+    token: ""
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getEnvVar("jwt_token");
+        if (token) {
+          req.setHeader("Authorization", `Bearer ${token}`);
+        }
+    - type: after-response
+      code: |-
+        const data = res.getBody();
+        // Save the token to an environment variable
+        bru.setEnvVar("jwt_token", data.access_token);
 bundled: false
 extensions:
   ignore:

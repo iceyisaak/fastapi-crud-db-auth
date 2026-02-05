@@ -5,11 +5,13 @@ info:
 
 http:
   method: GET
-  url: 127.0.0.1:8000/posts/1
+  url: "{{baseURL}}posts/1"
   body:
     type: json
     data: ""
-  auth: inherit
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxNywiZXhwIjoxNzcwMjI3MjExfQ.X8cgnisP1Zvlb0AbXSq_80kmT6fFAf8teaUv1N1iQWc
 
 settings:
   encodeUrl: true

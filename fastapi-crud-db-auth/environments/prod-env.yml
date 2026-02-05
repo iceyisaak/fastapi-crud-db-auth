@@ -1,0 +1,4 @@
+name: prod-env
+variables:
+  - name: baseURL
+    value: https://www.foodieworld.com

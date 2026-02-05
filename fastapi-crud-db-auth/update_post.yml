@@ -5,15 +5,17 @@ info:
 
 http:
   method: PUT
-  url: 127.0.0.1:8000/posts/1
+  url: "{{baseURL}}posts/1"
   body:
     type: json
     data: |-
       {
-        "title":"Updated title",
+        "title":"The 1st ever ever post",
         "content":"This is the new content of the first post"
       }
-  auth: inherit
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxNywiZXhwIjoxNzcwMjI4NDIxfQ.CbC2uVKp9Xzg1e5G6E-_5h2TQ4liCn0Y6NAeWAAqJzo
 
 settings:
   encodeUrl: true

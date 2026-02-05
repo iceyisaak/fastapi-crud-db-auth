@@ -1,0 +1,32 @@
+info:
+  name: login_user
+  type: http
+  seq: 9
+
+http:
+  method: POST
+  url: "{{baseURL}}login"
+  body:
+    type: multipart-form
+    data:
+      - name: username
+        type: text
+        value: ann@gmail.com
+      - name: password
+        type: text
+        value: pass123
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const data = res.getBody();
+        // Save the token to an environment variable
+        bru.setEnvVar("jwt_token", data.access_token);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
