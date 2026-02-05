@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from psycopg_pool import ConnectionPool
-import psycopg
 from dotenv import load_dotenv
 import os
 from app.database import engine, Base
