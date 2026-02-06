@@ -5,12 +5,11 @@ info:
 
 http:
   method: POST
-  url: 127.0.0.1:8000/books
+  url: 127.0.0.1:8000/api/v1/books
   body:
     type: json
     data: |-
       {
-        "id": 11,
         "title": "Get Ahead!",
         "author":"Jay Randy",
         "publisher": "Super Books",
