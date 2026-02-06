@@ -1,0 +1,15 @@
+info:
+  name: delete_book
+  type: http
+  seq: 5
+
+http:
+  method: DELETE
+  url: 127.0.0.1:8000/books/30
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

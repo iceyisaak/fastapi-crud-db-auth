@@ -1,0 +1,25 @@
+info:
+  name: update_book
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: 127.0.0.1:8000/books/5
+  body:
+    type: json
+    data: |-
+      {
+        "title": "The Silent Doctor",
+        "author": "S. P. Bandidas",
+        "publisher": "Crazy Books",
+        "page_count": 257,
+        "language": "en"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
