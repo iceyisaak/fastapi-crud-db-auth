@@ -1,0 +1,18 @@
+info:
+  name: refresh_token
+  type: http
+  seq: 8
+
+http:
+  method: GET
+  url: 127.0.0.1:8000/api/v1/auth/refresh_token
+  headers:
+    - name: Authorization
+      value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiYS5zbWl0aEBjb21wYW55LmNvbSIsInVpZCI6Ijc0Y2Q2NzFkLWFiNzUtNGRlYS1iODU5LTRhZmVhNjBlOGU5YSJ9LCJleHAiOjE3NzA4MzM5ODAsImp0aSI6IjI1YTMyMWRmLWU5MjktNGUwNi1iZTgzLTcwOWJmYWExMDlhZiIsInJlZnJlc2giOnRydWV9.P1-GksTmk0GNpWL6vj6HTM_W5D-u258b8c4xB0bopas
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
