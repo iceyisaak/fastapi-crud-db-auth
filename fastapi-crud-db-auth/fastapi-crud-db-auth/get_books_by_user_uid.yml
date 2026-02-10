@@ -1,0 +1,17 @@
+info:
+  name: get_books_by_user_uid
+  type: http
+  seq: 11
+
+http:
+  method: GET
+  url: 127.0.0.1:8000/api/v1/books/user/books
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiYS5zbWl0aEBjb21wYW55LmNvbSIsInVpZCI6ImY4NzhhZDMwLTg1ZTQtNGY5My04ZjQxLTJjMWFmNTIyOTA0NSIsInJvbGUiOiJ1c2VyIn0sImV4cCI6MTc3MDc0NzY1NCwianRpIjoiNzI1NDRjZjEtYjQ0Yi00MjdmLWI0ZWEtYWY5NTNhMDYwMGJkIiwicmVmcmVzaCI6ZmFsc2V9.ZE0rhYnypgXtLbOs2ngCu8FpmRwJOoQrPHszKa5QnW0
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

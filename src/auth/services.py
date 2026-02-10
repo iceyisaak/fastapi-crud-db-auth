@@ -1,12 +1,17 @@
 from . import models,schemas,utils
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlalchemy.orm import selectinload
+import uuid
+
 
 class User:
 
     @staticmethod
     async def get_user_by_email(email:str, session:AsyncSession):
-        statement=select(models.User).where(models.User.email==email)
+        statement=select(models.User).where(models.User.email==email).options(
+        selectinload(models.User.books) # type: ignore[arg-type]
+    )
         result=await session.exec(statement)
         user=result.first()
         return user
@@ -27,5 +32,11 @@ class User:
         await session.commit()
         return created_user
 
-        
+
+    @staticmethod
+    async def get_user_by_uuid(user_uid: uuid.UUID, session: AsyncSession):
+        statement = select(models.User).where(models.User.uid == user_uid)
+        result = await session.exec(statement)
+        user = result.first()
+        return user
     

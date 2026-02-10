@@ -1,4 +1,5 @@
 from sqlmodel import SQLModel
+from pydantic import BaseModel,ConfigDict
 import uuid
 from datetime import datetime
 
@@ -33,3 +34,4 @@ class Book(BookBase):
     uid: uuid.UUID
     created_at: datetime
     updated_at: datetime
+    model_config = {"from_attributes":True}

@@ -17,7 +17,9 @@ http:
         "page_count": 304,
         "language": "en"
       }
-  auth: inherit
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiYS5zbWl0aEBjb21wYW55LmNvbSIsInVpZCI6ImY4NzhhZDMwLTg1ZTQtNGY5My04ZjQxLTJjMWFmNTIyOTA0NSIsInJvbGUiOiJ1c2VyIn0sImV4cCI6MTc3MDczNTUzNiwianRpIjoiMzBmNjZiZjQtZmQ5Yi00ZGE0LTlkMTMtNjdkOGM3ZjUwYjhlIiwicmVmcmVzaCI6ZmFsc2V9.iEKiCwZTiV7nofOcVjlDccCC7gJ1gx_MAYMIdC3dN9g
 
 settings:
   encodeUrl: true

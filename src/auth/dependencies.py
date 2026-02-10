@@ -16,49 +16,56 @@ class TokenBearer(HTTPBearer):
     async def __call__(self, request: Request)->Any:
         # 1. Handle potential None from super call
         credentials = await super().__call__(request)
-        
-        if credentials:
-            token = credentials.credentials
-            
-            # 2. Corrected method call (added parenthesis)
-            if not self.token_valid(token):
-                raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
-                    detail="Invalid or expired token",
-                    headers={"WWW-Authenticate": "Bearer"},
-                )
-            token_data = utils.decode_token(token)
-            # 3. Ensure token_data exists before verification
-            if token_data is None:
-                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
 
 
-
-
-            if await redis.token_in_blocklist(token_data['jti']):
-                raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
-                    detail="Invalid or expired token",
-                    headers={"WWW-Authenticate": "Bearer"},
-                )
-            
-
-            # NEW: Check if user is blocked
-            user_uid = token_data['user']['uid']
-            if await redis.user_is_blocked(user_uid):
-                raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
-                    detail="Invalid or expired token",
-                    headers={"WWW-Authenticate": "Bearer"},
+        if credentials is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Not authenticated",
+                headers={"WWW-Authenticate": "Bearer"},
             )
 
-            
 
-            self.verify_token_data(token_data)
-
-            return token_data
         
-        return None
+        # if credentials:
+        token = credentials.credentials
+        
+        # 2. Corrected method call (added parenthesis)
+        if not self.token_valid(token):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Invalid or expired token",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        token_data = utils.decode_token(token)
+        # 3. Ensure token_data exists before verification
+        if token_data is None:
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+
+
+
+
+        if await redis.token_in_blocklist(token_data['jti']):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Invalid or expired token",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        
+
+        # NEW: Check if user is blocked
+        user_uid = token_data['user']['uid']
+        if await redis.user_is_blocked(user_uid):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Invalid or expired token",
+                headers={"WWW-Authenticate": "Bearer"},
+        )
+        
+
+        self.verify_token_data(token_data)
+        return token_data
+        
 
     # Added 'self' and logic check
     def token_valid(self, token: str) -> bool:
@@ -73,7 +80,7 @@ class TokenBearer(HTTPBearer):
 class AccessTokenBearer(TokenBearer):
     def verify_token_data(self, token_data: dict) -> None:
         # Fixed typo: 'token_ata' -> 'token_data'
-        if token_data and token_data["refresh"]:
+        if token_data and token_data.get("refresh"):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Please provide an access token",
@@ -83,7 +90,7 @@ class AccessTokenBearer(TokenBearer):
 
 class RefreshTokenBearer(TokenBearer):
     def verify_token_data(self, token_data: dict) -> None:
-        if token_data and not token_data["refresh"]:
+        if token_data and not token_data.get("refresh"):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Please provide a refresh token",
