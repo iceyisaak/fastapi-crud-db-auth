@@ -18,7 +18,7 @@ app=FastAPI(
     title="bookly",
     description="A simple book management API.",
     version=version,
-    lifespan=life_span
+    # lifespan=life_span(app) # Uncomment this line to use the lifespan context manager.
 )
 
 baseURL=f"/api/{version}"

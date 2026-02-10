@@ -6,10 +6,15 @@ info:
 http:
   method: GET
   url: 127.0.0.1:8000/api/v1/books
+  headers:
+    - name: Authorization
+      value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiYS5zbWl0aEBjb21wYW55LmNvbSIsInVpZCI6Ijc0Y2Q2NzFkLWFiNzUtNGRlYS1iODU5LTRhZmVhNjBlOGU5YSJ9LCJleHAiOjE3NzA3MTc5NzIsImp0aSI6IjIwY2E4YjJlLTAzMjgtNGFlYi1hNTMyLTFmNmExMjg2ZWZhZSIsInJlZnJlc2giOmZhbHNlfQ.9YZj5mdTqI6TZDpPFqkeTKgJd_clppLIImv3wESo2vU
   body:
     type: json
     data: ""
-  auth: inherit
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiYS5zbWl0aEBjb21wYW55LmNvbSIsInVpZCI6Ijc0Y2Q2NzFkLWFiNzUtNGRlYS1iODU5LTRhZmVhNjBlOGU5YSJ9LCJleHAiOjE3NzA3MjAyMDksImp0aSI6IjhiZDEyOTdjLWMyYzYtNGZmMy1hYWMwLTBmOTA2NDNiNmExMCIsInJlZnJlc2giOmZhbHNlfQ._cxy7KO5YKK30GUdUJR3sS3ZA6b_9-C1VRz_Rndi1NU
 
 settings:
   encodeUrl: true

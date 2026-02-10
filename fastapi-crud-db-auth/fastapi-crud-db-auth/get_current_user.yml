@@ -1,0 +1,17 @@
+info:
+  name: get_current_user
+  type: http
+  seq: 10
+
+http:
+  method: GET
+  url: 127.0.0.1:8000/api/v1/auth/me
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiYS5zbWl0aEBjb21wYW55LmNvbSIsInVpZCI6ImY4NzhhZDMwLTg1ZTQtNGY5My04ZjQxLTJjMWFmNTIyOTA0NSIsInJvbGUiOiJ1c2VyIn0sImV4cCI6MTc3MDcyNDM5MCwianRpIjoiMzlkZGE0Y2YtOTJhZi00Mzc3LTk0MDktMDA2YjkxZTUzNjQyIiwicmVmcmVzaCI6ZmFsc2V9.yd5SgpjoKCCe1WFjCJ4iDEwvRrjBXMrjqfRRE93Cwb4
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

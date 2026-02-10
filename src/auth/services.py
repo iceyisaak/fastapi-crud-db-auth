@@ -22,6 +22,7 @@ class User:
 
         created_user=models.User(**new_user)
         created_user.password_hash=utils.hash_password(new_user['password'])
+        created_user.role="user"
         session.add(created_user)
         await session.commit()
         return created_user

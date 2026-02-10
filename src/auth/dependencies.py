@@ -1,12 +1,12 @@
-from fastapi import Request, status, Depends
+from fastapi import Request, status,Depends
 from fastapi.security import HTTPBearer
-from fastapi.security.http import HTTPAuthorizationCredentials
 from fastapi.exceptions import HTTPException
-from . import utils
-from typing import Any
-from ..db import redis
+from . import utils,services,models
+from typing import Any,List
+from ..db import redis,main
+from sqlmodel.ext.asyncio.session import AsyncSession
 
-
+user_service=services.User()
 
 
 class TokenBearer(HTTPBearer):
@@ -41,6 +41,16 @@ class TokenBearer(HTTPBearer):
                     detail="Invalid or expired token",
                     headers={"WWW-Authenticate": "Bearer"},
                 )
+            
+
+            # NEW: Check if user is blocked
+            user_uid = token_data['user']['uid']
+            if await redis.user_is_blocked(user_uid):
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Invalid or expired token",
+                    headers={"WWW-Authenticate": "Bearer"},
+            )
 
             
 
@@ -80,3 +90,32 @@ class RefreshTokenBearer(TokenBearer):
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
+
+
+async def get_current_user(
+        token_detail:dict=Depends(AccessTokenBearer()),
+        session:AsyncSession=Depends(main.get_session)
+    ):
+    user_email=token_detail['user']['email']
+    user=await user_service.get_user_by_email(user_email,session)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return user
+
+
+
+
+class RoleChecker:
+    def __init__(self,allowed_roles:List[str])->None:
+        self.allowed_roles=allowed_roles
+
+    def __call__(self,current_user:models.User=Depends(get_current_user)):
+        if current_user.role not in self.allowed_roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You do not have permission to perform this action",
+            )
