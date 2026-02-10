@@ -1,9 +1,15 @@
 from sqlmodel import SQLModel, Field, Column, Relationship
 import sqlalchemy.dialects.postgresql as pg
-from ..books import models
-from typing import List
+# from ..books import models
+# from ..reviews import models as reviews_models
+from typing import List, TYPE_CHECKING
 import uuid
 from datetime import datetime
+
+
+if TYPE_CHECKING:
+    from ..reviews.models import Review
+    from ..books.models import Book
 
 
 class User(SQLModel, table=True):
@@ -25,7 +31,8 @@ class User(SQLModel, table=True):
     password_hash:str=Field(exclude=True)
     created_at:datetime=Field(sa_column=Column(pg.TIMESTAMP(timezone=True),default=datetime.now))
     updated_at:datetime=Field(sa_column=Column(pg.TIMESTAMP(timezone=True),default=datetime.now))
-    books:List["models.Book"]=Relationship(back_populates="user",sa_relationship_kwargs={"lazy":"selectin"})
+    books:List["Book"]=Relationship(back_populates="user",sa_relationship_kwargs={"lazy":"selectin"})
+    reviews:List["Review"]=Relationship(back_populates="user",sa_relationship_kwargs={"lazy":"selectin"})
 
 
 

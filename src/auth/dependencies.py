@@ -1,12 +1,16 @@
 from fastapi import Request, status,Depends
 from fastapi.security import HTTPBearer
 from fastapi.exceptions import HTTPException
-from . import utils,services,models
-from typing import Any,List
+# from . import utils,services,models
+from typing import Any,List,TYPE_CHECKING
 from ..db import redis,main
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-user_service=services.User()
+# user_service=services.User()
+
+if TYPE_CHECKING:
+    from . import models
+
 
 
 class TokenBearer(HTTPBearer):
@@ -14,6 +18,7 @@ class TokenBearer(HTTPBearer):
         super().__init__(auto_error=auto_error)
 
     async def __call__(self, request: Request)->Any:
+        from . import utils
         # 1. Handle potential None from super call
         credentials = await super().__call__(request)
 
@@ -69,6 +74,7 @@ class TokenBearer(HTTPBearer):
 
     # Added 'self' and logic check
     def token_valid(self, token: str) -> bool:
+        from . import utils
         token_data = utils.decode_token(token)
         return token_data is not None
 
@@ -103,7 +109,10 @@ async def get_current_user(
         token_detail:dict=Depends(AccessTokenBearer()),
         session:AsyncSession=Depends(main.get_session)
     ):
+    from . import services
+    user_service=services.User()
     user_email=token_detail['user']['email']
+    # user=await user_service.get_user_by_email(user_email,session)
     user=await user_service.get_user_by_email(user_email,session)
     if user is None:
         raise HTTPException(
@@ -120,7 +129,7 @@ class RoleChecker:
     def __init__(self,allowed_roles:List[str])->None:
         self.allowed_roles=allowed_roles
 
-    def __call__(self,current_user:models.User=Depends(get_current_user)):
+    def __call__(self,current_user:"models.User"=Depends(get_current_user)):
         if current_user.role not in self.allowed_roles:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
