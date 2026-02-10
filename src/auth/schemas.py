@@ -26,9 +26,12 @@ class User(BaseModel):
     password_hash:str=Field(exclude=True)
     created_at:datetime
     updated_at:datetime
+
+
+class UserBooks(User): 
     books:List[schemas.Book]
 
-    model_config = ConfigDict(from_attributes=True)
+    # model_config = ConfigDict(from_attributes=True)
 
 
 class UserLogin(BaseModel):

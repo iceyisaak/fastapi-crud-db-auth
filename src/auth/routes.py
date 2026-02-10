@@ -112,6 +112,6 @@ async def revoke_token(token_details:dict=Depends(access_token_bearer)):
 
 
 
-@router.get("/me",response_model=schemas.User)
+@router.get("/me",response_model=schemas.UserBooks)
 async def get_current_user(user=Depends(dependencies.get_current_user),_:bool=Depends(role_checker)):
     return user
