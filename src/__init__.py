@@ -16,7 +16,7 @@ async def life_span(app:FastAPI):
 version="v1"
 
 app=FastAPI(
-    title="bookly",
+    title="bookly: FastAPI Backend + Postgresql + Auth",
     description="A simple book management API.",
     version=version,
     # lifespan=life_span(app) # Uncomment this line to use the lifespan context manager.
@@ -29,10 +29,17 @@ app.include_router(auth_router, prefix=f"{baseURL}/auth", tags=["Auth"])
 app.include_router(reviews_router, prefix=f"{baseURL}/reviews", tags=["Reviews"])
 
 
+
+# app.add_exception_handler()
+
+
 # Rebuild schemas after all routers are imported to resolve forward references
 from src.auth.schemas import UserBooks
 from src.books.schemas import Book, BookDetail
 from src.reviews.schemas import Review
+# from src.errors import 
+# from src.middlewares import 
+
 
 UserBooks.model_rebuild()
 Book.model_rebuild()
