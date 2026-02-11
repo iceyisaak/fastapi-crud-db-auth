@@ -26,7 +26,7 @@ The project demonstrates:
 ## To be added:
   
   - Middlewares
-  - CustomErrors
+  - Custom Errors
   - User verification via Email
   - Password Reset
 
