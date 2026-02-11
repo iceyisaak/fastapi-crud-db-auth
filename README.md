@@ -82,23 +82,84 @@ Once the application is running, you can access:
 
 ## Project Structure
 
-```
-fastapi-crud-db-auth/
-├── app/                   # Application package
-│   ├── __init__.py
-│   ├── models.py          # Database models
-│   ├── schemas.py         # Pydantic schemas
-│   ├── crud.py            # CRUD operations
-│   ├── auth.py            # Authentication logic
-│   └── database.py        # Database configuration
-├── main.py                # Application entry point
-├── app.py                 # FastAPI app factory
-├── schema.py              # Additional schemas
-├── pyproject.toml         # Project dependencies (uv)
-├── uv.lock                # Dependency lock file
-├── .python-version        # Python version specification
-└── .gitignore             # Git ignore rules
-```
+# FastAPI CRUD Database Authentication Project Structure
+
+This is a well-organized FastAPI application following a **modular, feature-based architecture** with authentication, database operations, and API endpoints for managing books and reviews.
+
+## High-Level Architecture
+
+The project uses a **layered architecture** with clear separation of concerns:
+- **Routes Layer**: HTTP endpoints and request handling
+- **Services Layer**: Business logic
+- **Models Layer**: Database schema definitions
+- **Schemas Layer**: Data validation and serialization (Pydantic)
+
+## Directory Breakdown
+
+### `/src/auth/` - Authentication Module
+Core authentication and authorization functionality:
+- **`models.py`**: User database model (SQLAlchemy ORM)
+- **`routes.py`**: Auth endpoints (login, register, refresh tokens)
+- **`schemas.py`**: Request/response validation (Pydantic models)
+- **`services.py`**: Auth business logic (user creation, token generation)
+- **`dependencies.py`**: FastAPI dependency injection (e.g., `get_current_user`)
+- **`utils.py`**: Helper functions (password hashing, JWT utilities)
+
+### `/src/book/` - Books Module
+CRUD operations for books:
+- **`models.py`**: Book database model
+- **`routes.py`**: Book API endpoints (GET, POST, PUT, DELETE)
+- **`schemas.py`**: Book request/response validation
+- **`services.py`**: Book business logic (queries, updates)
+
+### `/src/reviews/` - Reviews Module
+Review management functionality:
+- **`models.py`**: Review database model (likely linked to books/users)
+- **`routes.py`**: Review API endpoints
+- **`schemas.py`**: Review validation schemas
+- **`services.py`**: Review business logic
+
+### `/src/db/` - Database Configuration
+Database connection and session management:
+- **`main.py`**: Database initialization, session factory (SQLAlchemy engine/session)
+- **`redis.py`**: Redis connection setup (likely for caching or session storage)
+
+### Root `/src/` Files
+Cross-cutting concerns:
+- **`config.py`**: Application configuration (environment variables, settings)
+- **`email.py`**: Email service (password reset, notifications)
+- **`errors.py`**: Custom exception handlers
+- **`middlewares.py`**: Custom middleware (CORS, logging, error handling)
+
+### `/main.py` (Root)
+Application entry point that:
+- Creates the FastAPI app instance
+- Registers all route modules
+- Applies middleware
+- Configures startup/shutdown events
+
+## Design Patterns
+
+**Modular Feature Organization**: Each feature (auth, books, reviews) is self-contained with its own routes, models, schemas, and services.
+
+**Dependency Injection**: The `dependencies.py` pattern allows reusable authentication and authorization checks across routes.
+
+**Separation of Concerns**: Clear boundaries between routing, business logic, and data access layers.
+
+**Schema Validation**: Pydantic schemas ensure type safety and automatic API documentation.
+
+This structure scales well, makes testing easier, and keeps related code grouped together.
+
+
+## To be added:
+  
+  - Middlewares
+  - CustomErrors
+  - User verification via Email
+  - Password Reset
+
+
+
 
 ## API Endpoints
 
