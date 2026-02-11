@@ -3,7 +3,33 @@
 Repo: [https://github.com/iceyisaak/fastapi-crud-db-auth](https://github.com/iceyisaak/fastapi-crud-db-auth)
 
 
+This is an experiemental project.
+
 A modern, production-ready FastAPI application implementing CRUD operations with database integration and JWT authentication.
+
+The project demonstrates:
+
+- Full CRUD Operations
+- Postgresql DB Connection
+- Alembic DB Migrations
+- SQL Relationships
+  - One-to-Many / Many-to-One
+  - Many-to-Many
+- JWT Authentication
+- The use of different layers:
+    - models
+    - schemas
+    - services
+    - routes
+
+
+## To be added:
+  
+  - Middlewares
+  - CustomErrors
+  - User verification via Email
+  - Password Reset
+
 
 ## Features
 
@@ -149,15 +175,6 @@ Application entry point that:
 **Schema Validation**: Pydantic schemas ensure type safety and automatic API documentation.
 
 This structure scales well, makes testing easier, and keeps related code grouped together.
-
-
-## To be added:
-  
-  - Middlewares
-  - CustomErrors
-  - User verification via Email
-  - Password Reset
-
 
 
 
