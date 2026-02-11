@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 import uuid
 from typing import Optional
 from datetime import datetime
@@ -14,6 +14,7 @@ class Review(BaseModel):
     created_at:datetime
     updated_at:datetime
 
+    model_config = ConfigDict(from_attributes=True)
 
 class ReviewCreate(BaseModel):
     rating:int=Field(lt=5)

@@ -2,6 +2,12 @@ from sqlmodel import SQLModel
 from pydantic import BaseModel,ConfigDict
 import uuid
 from datetime import datetime
+from typing import List, TYPE_CHECKING
+# from ..reviews import schemas as ReviewSchemas
+
+
+if TYPE_CHECKING:
+    from ..reviews.schemas import Review
 
 
 class BookBase(SQLModel):
@@ -12,6 +18,10 @@ class BookBase(SQLModel):
     published_date: datetime
     page_count: int 
     language: str
+
+
+class BookDetail(BookBase):
+    reviews:List["Review"]
 
 
 class BookCreate(BookBase):

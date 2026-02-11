@@ -27,3 +27,14 @@ baseURL=f"/api/{version}"
 app.include_router(books_router, prefix=f"{baseURL}/books", tags=["Books"])
 app.include_router(auth_router, prefix=f"{baseURL}/auth", tags=["Auth"])
 app.include_router(reviews_router, prefix=f"{baseURL}/reviews", tags=["Reviews"])
+
+
+# Rebuild schemas after all routers are imported to resolve forward references
+from src.auth.schemas import UserBooks
+from src.books.schemas import Book, BookDetail
+from src.reviews.schemas import Review
+
+UserBooks.model_rebuild()
+Book.model_rebuild()
+BookDetail.model_rebuild()
+Review.model_rebuild()

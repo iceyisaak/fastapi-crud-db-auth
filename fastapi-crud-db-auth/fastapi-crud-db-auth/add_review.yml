@@ -4,9 +4,18 @@ info:
   seq: 12
 
 http:
-  method: GET
-  url: ""
-  auth: inherit
+  method: POST
+  url: "{{baseURL}}reviews/book/e704f543-2e2f-49dd-a150-c7fb2c127c3a"
+  body:
+    type: json
+    data: |-
+      {
+        "rating":4,
+        "review_text":"The most FANTASTIC fiction of all time!"
+      }
+  auth:
+    type: bearer
+    token: ""
 
 settings:
   encodeUrl: true

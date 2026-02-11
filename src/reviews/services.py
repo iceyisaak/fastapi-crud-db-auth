@@ -4,6 +4,7 @@ from . import models,services, schemas
 from sqlmodel.ext.asyncio.session import AsyncSession
 from fastapi import HTTPException, status
 import uuid
+import logging
 
 
 
@@ -51,6 +52,7 @@ class Review:
 
             return new_review
         except Exception as e:
+            logging.exception(e)
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Something went wrong"

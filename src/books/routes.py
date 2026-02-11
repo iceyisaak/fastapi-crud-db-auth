@@ -51,7 +51,7 @@ async def get_all_books(
 @router.get(
     "/user/books",
     status_code=status.HTTP_200_OK, 
-    response_model=auth_schemas.User, # Changed from List[schemas.Book]
+    response_model=auth_schemas.User, 
     dependencies=[role_checker]
 )
 async def get_user_book_submissions(
@@ -92,7 +92,7 @@ async def create_book(
 @router.get(
         "/{uid}",
         status_code=status.HTTP_200_OK,
-        response_model=schemas.Book,
+        response_model=schemas.BookDetail,
         dependencies=[role_checker]
     )
 async def get_single_book(

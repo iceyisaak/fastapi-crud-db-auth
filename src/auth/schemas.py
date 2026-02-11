@@ -1,11 +1,13 @@
 from pydantic import BaseModel,Field
 from ..books import schemas
 import uuid
-from typing import List
+from typing import List, TYPE_CHECKING
 from datetime import datetime
 from pydantic import ConfigDict
 
-
+if TYPE_CHECKING:
+    from ..books.schemas import Book
+    from ..reviews.schemas import Review
 
 class UserCreate(BaseModel):
     first_name:str=Field(max_length=50)
@@ -29,11 +31,14 @@ class User(BaseModel):
 
 
 class UserBooks(User): 
-    books:List[schemas.Book]
+    books:List["Book"]
+    reviews:List["Review"]
 
-    # model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserLogin(BaseModel):
     email:str=Field(max_length=40)
     password:str=Field(min_length=6)
+
+
