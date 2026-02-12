@@ -6,9 +6,10 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
-from src.auth import models
-from src.books import models
-from src.reviews import models
+from src.api.auth import models
+from src.api.books import models
+from src.api.reviews import models
+from src.api.sessions import models
 from sqlmodel import SQLModel
 from src.config import Config
 

@@ -1,15 +1,15 @@
-from fastapi import Request, status,Depends
+from fastapi import Request, status, Depends
 from fastapi.security import HTTPBearer
 from fastapi.exceptions import HTTPException
-# from . import utils,services,models
 from typing import Any,List,TYPE_CHECKING
-from ..db import redis,main
+from ...db import main
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-# user_service=services.User()
 
 if TYPE_CHECKING:
     from . import models
+    from ..sessions import services as session_services
+
 
 
 
@@ -17,11 +17,10 @@ class TokenBearer(HTTPBearer):
     def __init__(self, auto_error: bool = True):
         super().__init__(auto_error=auto_error)
 
-    async def __call__(self, request: Request)->Any:
-        from . import utils
-        # 1. Handle potential None from super call
+    async def __call__(self, request: Request) -> Any:
+        from . import utils, services
+        
         credentials = await super().__call__(request)
-
 
         if credentials is None:
             raise HTTPException(
@@ -30,55 +29,41 @@ class TokenBearer(HTTPBearer):
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
-
-        
-        # if credentials:
         token = credentials.credentials
         
-        # 2. Corrected method call (added parenthesis)
         if not self.token_valid(token):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Invalid or expired token",
                 headers={"WWW-Authenticate": "Bearer"},
             )
+        
         token_data = utils.decode_token(token)
-        # 3. Ensure token_data exists before verification
+        
         if token_data is None:
-                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token"
+            )
 
-
-
-
-        if await redis.token_in_blocklist(token_data['jti']):
+        # Check if session is active (PostgreSQL)
+        db_session = request.state.db
+        session_service = session_services.Session()
+        if not await session_service.is_session_active(token_data['jti'], db_session):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Invalid or expired token",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-        
-
-        # NEW: Check if user is blocked
-        user_uid = token_data['user']['uid']
-        if await redis.user_is_blocked(user_uid):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Invalid or expired token",
-                headers={"WWW-Authenticate": "Bearer"},
-        )
-        
 
         self.verify_token_data(token_data)
         return token_data
-        
 
-    # Added 'self' and logic check
     def token_valid(self, token: str) -> bool:
         from . import utils
         token_data = utils.decode_token(token)
         return token_data is not None
 
-    # Added 'self' so child overrides match the signature
     def verify_token_data(self, token_data: dict):
         raise NotImplementedError("Please override this method in child classes")
 

@@ -3,8 +3,8 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 from sqlalchemy.ext.asyncio.engine import AsyncEngine
 from sqlmodel.ext.asyncio.session import AsyncSession
 from typing import AsyncGenerator
+from contextlib import asynccontextmanager
 from src.config import Config
-from sqlalchemy.orm import sessionmaker
 
 
 async_engine=AsyncEngine(
@@ -16,12 +16,13 @@ async_engine=AsyncEngine(
 
 async def init_db():
     async with async_engine.begin() as conn:
-        from src.books.models import Book
+        from src.api.books.models import Book
         await conn.run_sync(SQLModel.metadata.create_all)
         print("Database tables created successfully.")
 
 
 # Session dependency for FastAPI
+@asynccontextmanager
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
     async_session = async_sessionmaker(
         bind=async_engine,

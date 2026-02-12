@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-from .books import books_router
-from .auth import auth_router
-from .reviews import reviews_router
+from .api.books import books_router
+from .api.auth import auth_router
+from .api.reviews import reviews_router
 from contextlib import asynccontextmanager
 from src.db.main import init_db
 
@@ -34,9 +34,9 @@ app.include_router(reviews_router, prefix=f"{baseURL}/reviews", tags=["Reviews"]
 
 
 # Rebuild schemas after all routers are imported to resolve forward references
-from src.auth.schemas import UserBooks
-from src.books.schemas import Book, BookDetail
-from src.reviews.schemas import Review
+from src.api.auth.schemas import UserBooks
+from src.api.books.schemas import Book, BookDetail
+from src.api.reviews.schemas import Review
 # from src.errors import 
 # from src.middlewares import 
 

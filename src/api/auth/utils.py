@@ -38,7 +38,7 @@ def create_access_token(user_data:dict,expiry_delta:Optional[timedelta]=None,ref
     return token
 
 
-def decode_token(token:str)-> dict | None:
+def decode_token(token:str)-> dict:
     try:
         token_data=jwt.decode(
             jwt=token, 
