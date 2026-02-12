@@ -57,7 +57,6 @@ async def revoke_specific_session(
     Revoke a specific session by ID
     Allows users to logout from a specific device
     """
-    session_service = services.Session()
     
     # Get the session
     user_session = await session.get(services.models.Session, session_id)

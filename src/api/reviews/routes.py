@@ -1,18 +1,15 @@
 from fastapi import APIRouter,Depends
 from sqlmodel.ext.asyncio.session import AsyncSession
 from src.db.main import get_session
-from . import schemas,services
-from ..auth import models as auth_models
-from ..auth import dependencies as auth_dependencies
-from typing import TYPE_CHECKING
-from typing import Any
-
+from typing import Any, TYPE_CHECKING
 import uuid
 
 
 # Only import for type checking
 if TYPE_CHECKING:
-    from ..auth import models as auth_models
+    from . import schemas,services
+    from ..auth import dependencies as auth_dependencies
+    # from ..auth import models as auth_models
 
 
 router = APIRouter()
