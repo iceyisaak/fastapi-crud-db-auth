@@ -95,13 +95,6 @@ async def get_new_acccess_token(token_details:dict=Depends(refresh_token_bearer)
 
 @router.post("/logout")
 async def revoke_token(token_details:dict=Depends(access_token_bearer)):
-    # jti=token_details['jti']
-    # await redis.token_in_blocklist(jti)
-    # return JSONResponse(
-    #     content={"message":"Successfully logged out."},
-    #     status_code=status.HTTP_200_OK
-    # )
-
     user_uid = token_details['user']['uid']
     # Block user for duration of longest token (refresh token = 2 days)
     await redis.add_user_to_blocklist(user_uid, expiry=REFRESH_TOKEN_EXPIRY * 24 * 60 * 60)
