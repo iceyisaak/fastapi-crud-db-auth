@@ -32,22 +32,6 @@ async def get_all_books(
     return all_books
 
 
-# @router.get(
-#         "/user/books",
-#         status_code=status.HTTP_200_OK, 
-#         response_model=List[schemas.Book],
-#         dependencies=[role_checker]
-#     )
-# async def get_user_book_submissions(
-#     # user_uid:uuid.UUID,
-#     session:AsyncSession=Depends(get_session),
-#     token_details=Depends(access_token_bearer),
-# ):  
-#     user_uid = uuid.UUID(token_details["user"]["uid"])
-#     print(token_details)
-#     user_books=await book_service.get_user_books(user_uid,session=session)
-#     return user_books
-
 @router.get(
     "/user/books",
     status_code=status.HTTP_200_OK, 

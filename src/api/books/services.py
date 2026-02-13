@@ -14,16 +14,6 @@ class Book:
         return all_books
     
 
-    # async def get_user_books(self,user_uid:uuid.UUID,session:AsyncSession):
-    #     statement=(
-    #         select(models.Book)
-    #         .where(models.Book.user_uid==user_uid)
-    #         .options(selectinload(models.Book.user)) # type: ignore
-    #         .order_by(desc(models.Book.created_at)))
-    #     result=await session.exec(statement)
-    #     all_books=result.all()
-    #     return all_books
-
 
     async def get_user_books(self,user_uid:uuid.UUID,session:AsyncSession):
         statement=(
