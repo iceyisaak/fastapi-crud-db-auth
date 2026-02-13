@@ -1,28 +1,23 @@
 """
-Additional endpoints for session management
-
-Add these to your routes.py file to enable advanced session features
+Session management endpoints
 """
 
 from fastapi import APIRouter, Depends, status
 from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
-from . import services 
+from . import services, schemas
 from ..auth import dependencies
 from ...db import main
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 
-
-router=APIRouter()
-
+router = APIRouter()
 
 
-
-@router.get("/sessions")
+@router.get("/sessions", response_model=schemas.SessionListResponse)
 async def get_active_sessions(
     current_user = Depends(dependencies.get_current_user),
-    session: AsyncSession = Depends(main.get_session)
+    session: AsyncSession = Depends(main.get_session_context)
 ):
     """
     Get all active sessions for the current user
@@ -33,31 +28,26 @@ async def get_active_sessions(
         user_uid=str(current_user.uid),
         session=session
     )
-    return {
-        "sessions": [
-            {
-                "id": s.id,
-                "created_at": s.created_at.isoformat(),
-                "expires_at": s.expires_at.isoformat(),
-                "is_active": s.is_active
-            }
+    
+    return schemas.SessionListResponse(
+        sessions=[
+            schemas.SessionResponse.model_validate(s)
             for s in user_sessions
         ],
-        "total_count": len(user_sessions)
-    }
+        total_count=len(user_sessions)
+    )
 
 
-@router.delete("/sessions/{session_id}")
+@router.delete("/sessions/{session_id}", response_model=schemas.SessionRevokeResponse)
 async def revoke_specific_session(
     session_id: int,
     current_user = Depends(dependencies.get_current_user),
-    session: AsyncSession = Depends(main.get_session)
+    session: AsyncSession = Depends(main.get_session_context)
 ):
     """
     Revoke a specific session by ID
     Allows users to logout from a specific device
     """
-    
     # Get the session
     user_session = await session.get(services.models.Session, session_id)
     
@@ -79,17 +69,16 @@ async def revoke_specific_session(
     session.add(user_session)
     await session.commit()
     
-    return JSONResponse(
-        content={"message": "Session revoked successfully"},
-        status_code=status.HTTP_200_OK
+    return schemas.SessionRevokeResponse(
+        message="Session revoked successfully"
     )
 
 
-# Admin-only endpoints (add role_checker for admin role)
+# Admin-only endpoints
 
-@router.get("/admin/sessions")
+@router.get("/admin/sessions", response_model=schemas.SessionListResponse)
 async def get_all_sessions(
-    session: AsyncSession = Depends(main.get_session),
+    session: AsyncSession = Depends(main.get_session_context),
     _: bool = Depends(dependencies.RoleChecker(["admin"]))
 ):
     """
@@ -103,24 +92,19 @@ async def get_all_sessions(
     result = await session.exec(statement)
     all_sessions = result.all()
     
-    return {
-        "sessions": [
-            {
-                "id": s.id,
-                "user_uid": str(s.user_uid),
-                "created_at": s.created_at.isoformat(),
-                "expires_at": s.expires_at.isoformat()
-            }
+    return schemas.SessionListResponse(
+        sessions=[
+            schemas.SessionResponse.model_validate(s)
             for s in all_sessions
         ],
-        "total_count": len(all_sessions)
-    }
+        total_count=len(all_sessions)
+    )
 
 
-@router.post("/admin/revoke-user-sessions/{user_uid}")
+@router.post("/admin/revoke-user-sessions/{user_uid}", response_model=schemas.SessionRevokeResponse)
 async def admin_revoke_user_sessions(
     user_uid: str,
-    session: AsyncSession = Depends(main.get_session),
+    session: AsyncSession = Depends(main.get_session_context),
     _: bool = Depends(dependencies.RoleChecker(["admin"]))
 ):
     """
@@ -133,9 +117,6 @@ async def admin_revoke_user_sessions(
         session=session
     )
     
-    return JSONResponse(
-        content={
-            "message": f"Revoked {revoked_count} session(s) for user {user_uid}"
-        },
-        status_code=status.HTTP_200_OK
+    return schemas.SessionRevokeResponse(
+        message=f"Revoked {revoked_count} session(s) for user {user_uid}"
     )

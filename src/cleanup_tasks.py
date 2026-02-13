@@ -15,7 +15,7 @@ from .api.sessions import models
 
 async def cleanup_expired_sessions():
     """Remove expired sessions from the sessions table"""
-    async with main.get_session() as session:
+    async with main.get_session_context() as session:
         # Delete all sessions where expires_at is in the past
         statement = delete(models.Session).where(
             models.Session.expires_at < datetime.now(timezone.utc) # type: ignore
