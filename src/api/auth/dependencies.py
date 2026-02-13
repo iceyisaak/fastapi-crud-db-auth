@@ -8,7 +8,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 if TYPE_CHECKING:
     from . import models
-    from ..sessions import services as session_services
+    # from ..sessions import services as session_services
 
 
 
@@ -19,6 +19,8 @@ class TokenBearer(HTTPBearer):
 
     async def __call__(self, request: Request) -> Any:
         from . import utils, services
+        from ..sessions import services as session_services 
+        
         
         credentials = await super().__call__(request)
 

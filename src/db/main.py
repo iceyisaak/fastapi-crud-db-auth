@@ -13,22 +13,33 @@ async_engine=AsyncEngine(
         echo=True
 ))
 
+# Session factory (singleton)
+async_session = async_sessionmaker(
+    bind=async_engine,
+    class_=AsyncSession,
+    expire_on_commit=False
+)
+
 
 async def init_db():
     async with async_engine.begin() as conn:
         from src.api.books.models import Book
+        from src.api.auth.models import User  
+        from src.api.sessions.models import Session
         await conn.run_sync(SQLModel.metadata.create_all)
         print("Database tables created successfully.")
 
 
+
+
+
 # Session dependency for FastAPI
-@asynccontextmanager
-async def get_session() -> AsyncGenerator[AsyncSession, None]:
-    async_session = async_sessionmaker(
-        bind=async_engine,
-        class_=AsyncSession,
-        expire_on_commit=False
-    )
-    
+# @asynccontextmanager
+async def get_session() -> AsyncGenerator[AsyncSession, None]:    
     async with async_session() as session:
         yield session
+
+
+# For middleware - returns context manager
+def get_session_context():
+    return async_session()

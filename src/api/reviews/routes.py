@@ -6,10 +6,9 @@ import uuid
 
 
 # Only import for type checking
-if TYPE_CHECKING:
-    from . import schemas,services
-    from ..auth import dependencies as auth_dependencies
-    # from ..auth import models as auth_models
+# if TYPE_CHECKING:
+from . import schemas,services
+from ..auth import dependencies as auth_dependencies
 
 
 router = APIRouter()

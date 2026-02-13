@@ -3,7 +3,7 @@ from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from . import schemas,services,utils,dependencies
 from ..sessions import services as session_services
-from ...db import main,redis
+from ...db import main
 
 from sqlmodel.ext.asyncio.session import AsyncSession
 from datetime import timedelta,datetime,timezone

@@ -5,6 +5,7 @@ from .api.reviews import reviews_router
 from .api.sessions import sessions_router
 from contextlib import asynccontextmanager
 from src.db.main import init_db
+from src.middlewares import DBSessionMiddleware
 
 
 @asynccontextmanager
@@ -22,6 +23,10 @@ app=FastAPI(
     version=version,
     # lifespan=life_span(app) # Uncomment this line to use the lifespan context manager.
 )
+
+
+# Add the middleware - MUST be added before routes
+app.add_middleware(DBSessionMiddleware)
 
 baseURL=f"/api/{version}"
 
